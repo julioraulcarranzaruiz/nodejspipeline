@@ -11,10 +11,21 @@ node {
        sh 'npm test'
      }
    }
-   stage('Docker Build & Push') {
-     docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
-      def nuestraapp = docker.build("julioraulcarranzaruiz/nodejsapp:${gitcommit}", ".")
-      nuestraapp.push()
-     }
-   }
+
+   stage('Docker Build') {
+      agent any
+      steps {
+        sh 'docker build -t julioraulcarranzaruiz/nodejsapp:${gitcommit} .'
+      }
+    }
+
+   stage('Docker Push') {
+      agent any
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+          sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+          sh 'docker push julioraulcarranzaruiz/nodejsapp:${gitcommit}'
+        }
+      }
+
 }
