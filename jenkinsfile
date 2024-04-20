@@ -27,5 +27,5 @@ node {
           sh 'docker push julioraulcarranzaruiz/nodejsapp:${gitcommit}'
         }
       }
-
+    }
 }
