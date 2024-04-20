@@ -11,14 +11,12 @@ node {
        sh 'npm test'
      }
    }
-
    stage('Docker Build') {
       agent any
       steps {
         sh 'docker build -t julioraulcarranzaruiz/nodejsapp:${gitcommit} .'
       }
     }
-
    stage('Docker Push') {
       agent any
       steps {
